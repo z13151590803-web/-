@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三角洲租号估价表</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        secondary: '#3b82f6',
+                        accent: '#60a5fa',
+                        neutral: '#f3f4f6',
+                        'neutral-dark': '#9ca3af',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .form-input {
+                @apply w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+            }
+            .form-label {
+                @apply block text-sm font-medium text-gray-700 mb-1;
+            }
+            .form-select {
+                @apply w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white;
+            }
+            .form-checkbox {
+                @apply h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded;
+            }
+            .form-container {
+                @apply max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md;
+            }
+            .form-title {
+                @apply text-2xl font-bold text-center text-gray-800 mb-6;
+            }
+            .form-row {
+                @apply grid grid-cols-1 md:grid-cols-2 gap-4 mb-4;
+            }
+            .form-submit {
+                @apply w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200;
+            }
+            .result-box {
+                @apply p-4 bg-blue-50 border border-blue-200 rounded-md mt-4;
+            }
+            .result-text {
+                @apply text-lg font-semibold text-blue-800;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen py-8">
+    <div class="form-container">
+        <h1 class="form-title">三角洲租号估价表</h1>
+        
+        <form id="valuationForm" class="space-y-4">
+            <div class="form-row">
+                <div>
+                    <label for="kd" class="form-label">绝密KD</label>
+                    <input type="number" id="kd" name="kd" step="0.01" min="0" class="form-input" placeholder="请输入绝密KD">
+                </div>
+                <div>
+                    <label for="coins" class="form-label">哈夫币纯币(单位M，1M=100W)</label>
+                    <input type="number" id="coins" name="coins" min="0" class="form-input" placeholder="请输入哈夫币数量">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div>
+                    <label for="level" class="form-label">等级</label>
+                    <input type="number" id="level" name="level" min="0" class="form-input" placeholder="请输入等级">
+                </div>
+                <div>
+                    <label for="insurance" class="form-label">保险格数</label>
+                    <select id="insurance" name="insurance" class="form-select">
+                        <option value="0">请选择保险格数</option>
+                        <option value="1">1格</option>
+                        <option value="2">2格</option>
+                        <option value="3">3格</option>
+                        <option value="4">4格</option>
+                        <option value="5">5格</option>
+                        <option value="6">6格</option>
+                        <option value="7">7格</option>
+                        <option value="8">8格</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div>
+                    <label for="stamina" class="form-label">体力(训练中心)</label>
+                    <input type="number" id="stamina" name="stamina" min="0" max="100" class="form-input" value="0">
+                </div>
+                <div>
+                    <label for="weight" class="form-label">负重(靶场等级)</label>
+                    <input type="number" id="weight" name="weight" min="0" max="100" class="form-input" value="0">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div>
+                    <label for="awm" class="form-label">AWM子弹数量</label>
+                    <input type="number" id="awm" name="awm" min="0" class="form-input" placeholder="请输入AWM信息">
+                </div>
+                <div>
+                    <label for="helmet" class="form-label">6头数量</label>
+                    <input type="number" id="helmet" name="helmet" min="0" class="form-input" placeholder="请输入6头信息">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div>
+                    <label for="armor" class="form-label">6甲数量</label>
+                    <input type="number" id="armor" name="armor" min="0" class="form-input" placeholder="请输入6甲信息">
+                </div>
+                <div>
+                    <label for="knife" class="form-label">刀皮(有的话回收比例-1)</label>
+                    <div class="flex items-center mt-2">
+                        <input type="checkbox" id="knife" name="knife" class="form-checkbox">
+                        <label for="knife" class="ml-2 text-sm text-gray-700">有刀皮</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div>
+                    <label for="skin" class="form-label">干员红皮</label>
+                    <div class="flex items-center mt-2">
+                        <input type="checkbox" id="skin" name="skin" class="form-checkbox">
+                        <label for="skin" class="ml-2 text-sm text-gray-700">有干员红皮</label>
+                    </div>
+                </div>
+                <div>
+                    <label for="deposit" class="form-label">押金（租客缴纳，封号赔偿用，号主必填）</label>
+                    <input type="number" id="deposit" name="deposit" min="0" class="form-input" placeholder="请输入押金金额">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div>
+                    <label for="onlineTime" class="form-label">号主在线时间（需配合人脸验证！）</label>
+                    <input type="text" id="onlineTime" name="onlineTime" class="form-input" placeholder="请输入在线时间">
+                </div>
+                <div>
+                    <label for="banRecord" class="form-label">封禁记录(没有可不填写)</label>
+                    <input type="text" id="banRecord" name="banRecord" class="form-input" placeholder="请输入封禁记录">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div>
+                    <label for="rentalPeriod" class="form-label">租期（天）</label>
+                    <input type="number" id="rentalPeriod" name="rentalPeriod" min="1" class="form-input" placeholder="请输入租期">
+                </div>
+                <div>
+                    <label for="contact" class="form-label">联系号码</label>
+                    <input type="text" id="contact" name="contact" class="form-input" placeholder="请输入联系号码">
+                </div>
+            </div>
+            
+            <div class="result-box">
+                <div class="form-row">
+                    <div>
+                        <label for="recoveryRate" class="form-label">回收比例（根据保险系数、体力、负重计算得出）</label>
+                        <input type="text" id="recoveryRate" name="recoveryRate" class="form-input bg-gray-100" value="自动计算" readonly>
+                    </div>
+                    <div>
+                        <label for="recoveryRent" class="form-label">回收租金（根据哈夫币纯币、比例计算得出）</label>
+                        <input type="text" id="recoveryRent" name="recoveryRent" class="form-input bg-gray-100" value="" readonly>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="button" id="calculateBtn" class="form-submit">
+                <i class="fa fa-calculator mr-2"></i>计算估价
+            </button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('valuationForm');
+            const calculateBtn = document.getElementById('calculateBtn');
+            const recoveryRateInput = document.getElementById('recoveryRate');
+            const recoveryRentInput = document.getElementById('recoveryRent');
+            
+            // 计算回收比例和租金的函数
+            function calculateValuation() {
+                // 获取表单数据
+                const kd = parseFloat(document.getElementById('kd').value) || 0;
+                const coins = parseFloat(document.getElementById('coins').value) || 0;
+                const level = parseInt(document.getElementById('level').value) || 0;
+                const insurance = parseInt(document.getElementById('insurance').value) || 0;
+                const stamina = parseInt(document.getElementById('stamina').value) || 0;
+                const weight = parseInt(document.getElementById('weight').value) || 0;
+                const awm = parseInt(document.getElementById('awm').value) || 0;
+                const helmet = parseInt(document.getElementById('helmet').value) || 0;
+                const armor = parseInt(document.getElementById('armor').value) || 0;
+                const hasKnife = document.getElementById('knife').checked;
+                const hasSkin = document.getElementById('skin').checked;
+                const deposit = parseFloat(document.getElementById('deposit').value) || 0;
+                const rentalPeriod = parseInt(document.getElementById('rentalPeriod').value) || 1;
+                
+                // 基础回收比例计算
+                let recoveryRate = 50; // 基础比例50%
+                
+                // 根据保险格数调整比例
+                if (insurance >= 6) {
+                    recoveryRate += 10;
+                } else if (insurance >= 4) {
+                    recoveryRate += 5;
+                } else if (insurance >= 2) {
+                    recoveryRate += 2;
+                }
+                
+                // 根据体力调整比例
+                if (stamina >= 80) {
+                    recoveryRate += 5;
+                } else if (stamina >= 50) {
+                    recoveryRate += 3;
+                } else if (stamina >= 20) {
+                    recoveryRate += 1;
+                }
+                
+                // 根据负重调整比例
+                if (weight >= 80) {
+                    recoveryRate += 5;
+                } else if (weight >= 50) {
+                    recoveryRate += 3;
+                } else if (weight >= 20) {
+                    recoveryRate += 1;
+                }
+                
+                // 根据KD调整比例
+                if (kd >= 3.0) {
+                    recoveryRate += 10;
+                } else if (kd >= 2.0) {
+                    recoveryRate += 5;
+                } else if (kd >= 1.5) {
+                    recoveryRate += 2;
+                } else if (kd >= 1.0) {
+                    recoveryRate += 1;
+                } else if (kd < 0.5) {
+                    recoveryRate -= 5;
+                }
+                
+                // 根据等级调整比例
+                if (level >= 100) {
+                    recoveryRate += 5;
+                } else if (level >= 50) {
+                    recoveryRate += 3;
+                } else if (level >= 20) {
+                    recoveryRate += 1;
+                }
+                
+                // 特殊物品调整
+                if (awm > 0) recoveryRate += 2;
+                if (helmet > 0) recoveryRate += 1;
+                if (armor > 0) recoveryRate += 1;
+                
+                // 刀皮和干员红皮调整
+                if (hasKnife) recoveryRate -= 1;
+                if (hasSkin) recoveryRate += 2;
+                
+                // 确保比例在合理范围内
+                recoveryRate = Math.max(30, Math.min(90, recoveryRate));
+                
+                // 计算回收租金
+                const recoveryRent = (coins * recoveryRate / 100 * rentalPeriod).toFixed(2);
+                
+                // 更新表单显示
+                recoveryRateInput.value = recoveryRate + '%';
+                recoveryRentInput.value = recoveryRent + ' M';
+                
+                // 添加动画效果
+                recoveryRateInput.classList.add('bg-green-100');
+                recoveryRentInput.classList.add('bg-green-100');
+                
+                setTimeout(() => {
+                    recoveryRateInput.classList.remove('bg-green-100');
+                    recoveryRentInput.classList.remove('bg-green-100');
+                }, 1000);
+            }
+            
+            // 添加表单输入事件监听器，实时计算
+            const inputs = form.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('input', calculateValuation);
+            });
+            
+            // 添加计算按钮点击事件
+            calculateBtn.addEventListener('click', function() {
+                calculateValuation();
+                
+                // 添加按钮点击效果
+                this.classList.add('bg-green-600');
+                setTimeout(() => {
+                    this.classList.remove('bg-green-600');
+                }, 300);
+            });
+            
+            // 初始计算
+            calculateValuation();
+        });
+    </script>
+</body>
+</html>
